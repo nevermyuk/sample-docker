@@ -14,6 +14,11 @@ pipeline {
         }
 
         stage('Unit Test') {
+            agent {
+				docker {
+							image 'node:16-alpine'
+				}
+			}
             steps {
                 sh '''
                     cd sample-express
