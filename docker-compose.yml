@@ -1,0 +1,73 @@
+version: "3.9"
+services:
+  dind:
+    image: docker:dind
+    container_name: dind
+    privileged: true
+    restart: always
+    networks:
+      jenkins:
+        aliases:
+          - docker
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    ports:
+      - 2376:2375
+      - 5000:5000
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client
+      - $HOME:/home
+    command: --storage-driver=overlay2
+
+  jenkins:
+    container_name: jenkins
+    user: root
+    restart: on-failure
+    build:
+      dockerfile: jenkins.Dockerfile
+    environment:
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_CERT_PATH: /certs/client
+      DOCKER_TLS_VERIFY: 1
+      JAVA_OPTS: "-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true"
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client:ro
+      - $HOME:/home
+    networks:
+      - jenkins
+    depends_on:
+      - dind
+    ports:
+      - 8080:8080
+      - 50000:50000
+
+  app:
+    container_name: app
+    build:
+      context: sample-express
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    
+
+
+
+  sonarqube:
+    container_name: sonarqube
+    image: sonarqube:latest
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
+    networks:
+      - jenkins
+    ports:
+      - 9000:9000
+
+networks:
+  jenkins:
+
+
+volumes:
+  jenkins-docker-certs:
+  jenkins-data:
