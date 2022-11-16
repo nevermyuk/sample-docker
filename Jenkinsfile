@@ -22,6 +22,7 @@ pipeline {
             steps {
                 sh '''
                     cd sample-express
+                    npm install
                     npm run test
                 '''
             }
