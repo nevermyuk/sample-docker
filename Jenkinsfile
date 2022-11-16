@@ -12,6 +12,15 @@ pipeline {
                 dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'Default'
             }
         }
+
+        stage('Unit Test') {
+            steps {
+                sh '''
+                    cd sample-express
+                    npm run test
+                '''
+            }
+        }
     }
     post {
         success {
