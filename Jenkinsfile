@@ -26,8 +26,10 @@ pipeline {
                     npm run test
                 '''
             }
-            always {
-                junit checksName: 'Jest Tests', testResults: 'sample-express/junit.xml'
+            post{
+                always {
+                    junit checksName: 'Jest Tests', testResults: 'sample-express/junit.xml'
+                }
             }
         }
     }
