@@ -32,5 +32,8 @@ pipeline {
         success {
             dependencyCheckPublisher pattern: 'dependency-check-report.xml'
         }
+        always {
+            junit checksName: 'Jest Tests', testResults: 'sample-express/junit.xml'
+        }
     }
 }
