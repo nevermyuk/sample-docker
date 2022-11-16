@@ -26,14 +26,14 @@ pipeline {
                     npm run test
                 '''
             }
+            always {
+                junit checksName: 'Jest Tests', testResults: 'sample-express/junit.xml'
+            }
         }
     }
     post {
         success {
             dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-        }
-        always {
-            junit checksName: 'Jest Tests', testResults: 'sample-express/junit.xml'
         }
     }
 }
