@@ -22,11 +22,6 @@ pipeline {
                     }
                 }
             }
-            post {
-                always {
-                        recordIssues enabledForFailure: true, tools: [sonarQube()]
-                }
-            }
         }
 
         stage('Unit Test') {
@@ -52,6 +47,9 @@ pipeline {
     post {
         success {
             dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+        }
+        always {
+                        recordIssues enabledForFailure: true, tools: [sonarQube()]
         }
 
     }
