@@ -53,7 +53,8 @@ services:
     
   sonarqube:
     container_name: sonarqube
-    image: sonarqube:latest
+    build:
+      dockerfile: sonarqube.Dockerfile
     environment:
       SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
     networks:
